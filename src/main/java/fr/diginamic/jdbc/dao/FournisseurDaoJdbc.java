@@ -43,11 +43,11 @@ public class FournisseurDaoJdbc implements  IFournisseurDAO{
     @Override
     public void insert(Fournisseur fournisseur) {
         try (Connection maConnection = DriverManager.getConnection(DB_URL, DB_USER, DB_PSW);
-             PreparedStatement pstmt = maConnection.prepareStatement("INSERT INTO FOURNISSEUR (ID,NOM) VALUES (?,?)")
+             Statement monStatement = maConnection.createStatement();
         ) {
-            pstmt.setInt(1,fournisseur.getID());
-            pstmt.setString(2,fournisseur.getNom());
-            pstmt.executeUpdate();
+            int id = fournisseur.getID();
+            String nom = fournisseur.getNom();
+            monStatement.executeUpdate("INSERT INTO FOURNISSEUR (ID,NOM) VALUES ('"+id+"','"+nom+"')");
         } catch (SQLException e) {
             System.err.println("err is " + e);
 //            throw new RuntimeException(e);
@@ -58,11 +58,10 @@ public class FournisseurDaoJdbc implements  IFournisseurDAO{
     public int update(String ancienNom, String newNom) {
         int nb = 0;
         try (Connection maConnection = DriverManager.getConnection(DB_URL, DB_USER, DB_PSW);
-             PreparedStatement pstmt = maConnection.prepareStatement("UPDATE FOURNISSEUR SET NOM = ? WHERE NOM = ?")
+             Statement monStatement = maConnection.createStatement();
         ) {
-            pstmt.setString(1,newNom);
-            pstmt.setString(2,ancienNom);
-            nb = pstmt.executeUpdate();
+            nb = monStatement.executeUpdate("UPDATE FOURNISSEUR SET NOM = '"+newNom+"' WHERE NOM = '"+ancienNom+"'");
+
         } catch (SQLException e) {
             System.err.println("err is " + e);
 //            throw new RuntimeException(e);
@@ -72,19 +71,17 @@ public class FournisseurDaoJdbc implements  IFournisseurDAO{
 
     @Override
     public boolean delete(Fournisseur fournisseur) {
-        boolean flag = false;
+        int nb = 0;
 
         try (Connection maConnection = DriverManager.getConnection(DB_URL, DB_USER, DB_PSW);
-             PreparedStatement psmt = maConnection.prepareStatement("DELETE FROM FOURNISSEUR WHERE ID = ?")
+             Statement monStatement = maConnection.createStatement();
         ) {
-            psmt.setInt(1,fournisseur.getID());
-            psmt.executeUpdate();
-            flag=true;
+            nb = monStatement.executeUpdate("DELETE FROM FOURNISSEUR WHERE ID = '"+fournisseur.getID()+"'");
+
         } catch (SQLException e) {
             System.err.println("err is " + e);
 //            throw new RuntimeException(e);
         }
-
-        return flag;
+        return nb > 0;
     }
 }
