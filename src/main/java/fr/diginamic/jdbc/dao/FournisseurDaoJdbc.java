@@ -20,11 +20,11 @@ public class FournisseurDaoJdbc implements  IFournisseurDAO{
         DB_PSW = monFichierConf.getString("db.DB_PSW");
     }
     @Override
-    public List<Fournisseur> extraire() {
+    public List<Fournisseur> extraire() throws SQLException {
         ArrayList<Fournisseur> fournisseurs = new ArrayList<>();
         try (Connection maConnection = DriverManager.getConnection(DB_URL, DB_USER, DB_PSW);
-             Statement monStatement = maConnection.createStatement();
-             ResultSet curseur = monStatement.executeQuery("SELECT * FROM FOURNISSEUR");
+             PreparedStatement psmt = maConnection.prepareStatement("SELECT * FROM FOURNISSEUR");
+             ResultSet curseur = psmt.executeQuery();
         ) {
             while(curseur.next()){
                 Integer id = curseur.getInt("ID");
@@ -32,55 +32,43 @@ public class FournisseurDaoJdbc implements  IFournisseurDAO{
                 Fournisseur fournisseurCourant = new Fournisseur(id,nom);
                 fournisseurs.add(fournisseurCourant);
             }
-        } catch (SQLException e) {
-            System.err.println("err is " + e);
-//            throw new RuntimeException(e);
-
         }
         return fournisseurs;
     }
 
     @Override
-    public void insert(Fournisseur fournisseur) {
+    public void insert(Fournisseur fournisseur) throws SQLException {
         try (Connection maConnection = DriverManager.getConnection(DB_URL, DB_USER, DB_PSW);
-             Statement monStatement = maConnection.createStatement();
+             PreparedStatement psmt = maConnection.prepareStatement("INSERT INTO FOURNISSEUR (ID,NOM) VALUES (?,?)");
         ) {
-            int id = fournisseur.getID();
-            String nom = fournisseur.getNom();
-            monStatement.executeUpdate("INSERT INTO FOURNISSEUR (ID,NOM) VALUES ('"+id+"','"+nom+"')");
-        } catch (SQLException e) {
-            System.err.println("err is " + e);
-//            throw new RuntimeException(e);
+            psmt.setInt(1,fournisseur.getID());
+            psmt.setString(2, fournisseur.getNom());
+            psmt.executeUpdate();
         }
     }
 
     @Override
-    public int update(String ancienNom, String newNom) {
+    public int update(String ancienNom, String newNom) throws SQLException {
         int nb = 0;
         try (Connection maConnection = DriverManager.getConnection(DB_URL, DB_USER, DB_PSW);
-             Statement monStatement = maConnection.createStatement();
+             PreparedStatement psmt = maConnection.prepareStatement("UPDATE FOURNISSEUR SET NOM = ? WHERE NOM = ?");
         ) {
-            nb = monStatement.executeUpdate("UPDATE FOURNISSEUR SET NOM = '"+newNom+"' WHERE NOM = '"+ancienNom+"'");
-
-        } catch (SQLException e) {
-            System.err.println("err is " + e);
-//            throw new RuntimeException(e);
+           psmt.setString(1,newNom);
+           psmt.setString(2,ancienNom);
+           nb = psmt.executeUpdate();
         }
         return nb;
     }
 
     @Override
-    public boolean delete(Fournisseur fournisseur) {
+    public boolean delete(Fournisseur fournisseur) throws SQLException {
         int nb = 0;
 
         try (Connection maConnection = DriverManager.getConnection(DB_URL, DB_USER, DB_PSW);
-             Statement monStatement = maConnection.createStatement();
+             PreparedStatement psmt = maConnection.prepareStatement("DELETE FROM FOURNISSEUR WHERE ID = ? ");
         ) {
-            nb = monStatement.executeUpdate("DELETE FROM FOURNISSEUR WHERE ID = '"+fournisseur.getID()+"'");
-
-        } catch (SQLException e) {
-            System.err.println("err is " + e);
-//            throw new RuntimeException(e);
+            psmt.setInt(1, fournisseur.getID());
+            nb = psmt.executeUpdate();
         }
         return nb > 0;
     }
