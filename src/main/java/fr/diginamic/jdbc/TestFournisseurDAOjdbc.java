@@ -9,43 +9,26 @@ import java.util.List;
 public class TestFournisseurDAOjdbc {
     public static void main(String[] args) {
         try{
-            FournisseurDaoJdbc fourDaoJdbc = new FournisseurDaoJdbc();
-            listerFournisseur(fourDaoJdbc);
-//            insertFournisseur(fourDaoJdbc);
-//            updateFournisseur(fourDaoJdbc);
-//            deleteFournisseur(fourDaoJdbc);
-        }catch (Exception e){
-            System.out.println(e);
-        }
-
-    }
-
-    private static void listerFournisseur(FournisseurDaoJdbc dao) throws SQLException {
-        List<Fournisseur> fournisseurs = dao.extraire();
-        for (Fournisseur f:fournisseurs
-             ) {
-            System.out.println(f);
-        }
-    }
-
-    private static void insertFournisseur(FournisseurDaoJdbc dao) throws SQLException {
-        Fournisseur f = new Fournisseur("l'alalal");
-        dao.insert(f);
-    }
-
-    private static void updateFournisseur(FournisseurDaoJdbc dao) throws SQLException {
-        dao.update("l'alalal","newL'alala");
-    }
-
-    private static void deleteFournisseur(FournisseurDaoJdbc dao) throws SQLException {
-        List<Fournisseur> fournisseurs = dao.extraire();
-
-        for (Fournisseur f: fournisseurs
-             ) {
-            if(f.getNom() == "l'alalal"){
-                dao.delete(f);
+            FournisseurDaoJdbc fourDao = new FournisseurDaoJdbc();
+            // lister les fournisseurs
+            List<Fournisseur> fournisseurs = fourDao.extraire();
+            for (Fournisseur f:fournisseurs
+            ) {
                 System.out.println(f);
             }
+
+            // ajouter new fournisseur
+            Fournisseur newFour = new Fournisseur("l'alalal");
+            fourDao.insert(newFour);
+
+            // update fournisseur
+            fourDao.update("l'alalal","l'a");
+
+            // delete fournisseur
+            fourDao.delete(newFour);
+
+        }catch (Exception e){
+            System.out.println(e);
         }
 
     }
