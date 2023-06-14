@@ -25,9 +25,9 @@ public class TestSelect {
         ) {
             ArrayList<Fournisseur> fournisseurs = new ArrayList<>();
             while(curseur.next()){
-                Integer id = curseur.getInt("ID");
+//                Integer id = curseur.getInt("ID");
                 String nom = curseur.getString("NOM");
-                Fournisseur fournisseurCourant = new Fournisseur(id,nom);
+                Fournisseur fournisseurCourant = new Fournisseur(nom);
                 fournisseurs.add(fournisseurCourant);
             }
             System.out.println(fournisseurs);

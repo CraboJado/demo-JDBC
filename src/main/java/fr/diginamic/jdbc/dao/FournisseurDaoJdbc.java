@@ -29,7 +29,7 @@ public class FournisseurDaoJdbc implements  IFournisseurDAO{
             while(curseur.next()){
                 Integer id = curseur.getInt("ID");
                 String nom = curseur.getString("NOM");
-                Fournisseur fournisseurCourant = new Fournisseur(id,nom);
+                Fournisseur fournisseurCourant = new Fournisseur(nom);
                 fournisseurs.add(fournisseurCourant);
             }
         }
@@ -39,10 +39,9 @@ public class FournisseurDaoJdbc implements  IFournisseurDAO{
     @Override
     public void insert(Fournisseur fournisseur) throws SQLException {
         try (Connection maConnection = DriverManager.getConnection(DB_URL, DB_USER, DB_PSW);
-             PreparedStatement psmt = maConnection.prepareStatement("INSERT INTO FOURNISSEUR (ID,NOM) VALUES (?,?)");
+             PreparedStatement psmt = maConnection.prepareStatement("INSERT INTO FOURNISSEUR (NOM) VALUES (?)");
         ) {
-            psmt.setInt(1,fournisseur.getID());
-            psmt.setString(2, fournisseur.getNom());
+            psmt.setString(1, fournisseur.getNom());
             psmt.executeUpdate();
         }
     }
@@ -65,9 +64,9 @@ public class FournisseurDaoJdbc implements  IFournisseurDAO{
         int nb = 0;
 
         try (Connection maConnection = DriverManager.getConnection(DB_URL, DB_USER, DB_PSW);
-             PreparedStatement psmt = maConnection.prepareStatement("DELETE FROM FOURNISSEUR WHERE ID = ? ");
+             PreparedStatement psmt = maConnection.prepareStatement("DELETE FROM FOURNISSEUR WHERE NOM = ? ");
         ) {
-            psmt.setInt(1, fournisseur.getID());
+            psmt.setString(1, fournisseur.getNom());
             nb = psmt.executeUpdate();
         }
         return nb > 0;

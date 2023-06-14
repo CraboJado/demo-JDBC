@@ -1,20 +1,13 @@
 package fr.diginamic.jdbc.entites;
 
 public class Fournisseur {
-    private int ID;
     private String nom;
 
-    public Fournisseur(int ID, String nom) {
-        this.ID = ID;
+    public Fournisseur(String nom) {
         this.nom = nom;
     }
 
-    public int getID() {
-        return ID;
-    }
-
-    public void setID(int ID) {
-        this.ID = ID;
+    public Fournisseur() {
     }
 
     public String getNom() {
@@ -28,8 +21,7 @@ public class Fournisseur {
     @Override
     public String toString() {
         return "Fournisseur{" +
-                "ID=" + ID +
-                ", nom='" + nom + '\'' +
+                "nom='" + nom + '\'' +
                 '}';
     }
 }

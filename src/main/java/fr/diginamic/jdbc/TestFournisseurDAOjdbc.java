@@ -4,7 +4,6 @@ import fr.diginamic.jdbc.dao.FournisseurDaoJdbc;
 import fr.diginamic.jdbc.entites.Fournisseur;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class TestFournisseurDAOjdbc {
@@ -30,7 +29,7 @@ public class TestFournisseurDAOjdbc {
     }
 
     private static void insertFournisseur(FournisseurDaoJdbc dao) throws SQLException {
-        Fournisseur f = new Fournisseur(5,"l'alalal");
+        Fournisseur f = new Fournisseur("l'alalal");
         dao.insert(f);
     }
 
@@ -43,7 +42,7 @@ public class TestFournisseurDAOjdbc {
 
         for (Fournisseur f: fournisseurs
              ) {
-            if(f.getID() == 5){
+            if(f.getNom() == "l'alalal"){
                 dao.delete(f);
                 System.out.println(f);
             }
